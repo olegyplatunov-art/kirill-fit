@@ -2,7 +2,7 @@
 /* Кирилл Fit — личное приложение для тренировок и питания.
    Все данные хранятся только на этом iPhone (IndexedDB). Сетевых запросов с данными нет. */
 (function () {
-  const VERSION = '1.0.0';
+  const VERSION = '1.1.0';
   const SCHEMA = 1;
 
   /* ---------- DOM-помощники (без innerHTML) ---------- */
@@ -324,62 +324,27 @@
   const pctColor = p => (p >= 0.999 ? 'var(--ok)' : p <= 0 ? 'var(--bad)' : 'var(--warn)');
   const pctClass = p => (p >= 0.999 ? 'done' : p <= 0 ? 'zero' : 'part');
 
-  /* Схематичная фигура: передний и задний вид */
-  const BODY = [
-    ['f', null, 'circle', { cx: 60, cy: 20, r: 13 }], ['f', null, 'rect', { x: 54, y: 31, width: 12, height: 10, rx: 3 }],
-    ['f', 'traps', 'path', { d: 'M46 44 L60 40 L74 44 L70 49 L50 49 Z' }],
-    ['f', 'delts_front', 'ellipse', { cx: 39, cy: 55, rx: 10, ry: 9 }], ['f', 'delts_front', 'ellipse', { cx: 81, cy: 55, rx: 10, ry: 9 }],
-    ['f', 'delts_side', 'ellipse', { cx: 31, cy: 59, rx: 4, ry: 8 }], ['f', 'delts_side', 'ellipse', { cx: 89, cy: 59, rx: 4, ry: 8 }],
-    ['f', 'chest', 'ellipse', { cx: 50, cy: 62, rx: 11, ry: 9 }], ['f', 'chest', 'ellipse', { cx: 70, cy: 62, rx: 11, ry: 9 }],
-    ['f', 'biceps', 'ellipse', { cx: 31, cy: 81, rx: 6, ry: 13 }], ['f', 'biceps', 'ellipse', { cx: 89, cy: 81, rx: 6, ry: 13 }],
-    ['f', 'forearms', 'ellipse', { cx: 27, cy: 109, rx: 5, ry: 14 }], ['f', 'forearms', 'ellipse', { cx: 93, cy: 109, rx: 5, ry: 14 }],
-    ['f', null, 'circle', { cx: 26, cy: 128, r: 5 }], ['f', null, 'circle', { cx: 94, cy: 128, r: 5 }],
-    ['f', 'abs', 'rect', { x: 53, y: 73, width: 14, height: 38, rx: 5 }],
-    ['f', 'obliques', 'ellipse', { cx: 46, cy: 91, rx: 4, ry: 14 }], ['f', 'obliques', 'ellipse', { cx: 74, cy: 91, rx: 4, ry: 14 }],
-    ['f', null, 'rect', { x: 43, y: 111, width: 34, height: 20, rx: 7, shade: 1 }],
-    ['f', 'quads', 'ellipse', { cx: 50, cy: 152, rx: 9, ry: 22 }], ['f', 'quads', 'ellipse', { cx: 70, cy: 152, rx: 9, ry: 22 }],
-    ['f', 'adductors', 'ellipse', { cx: 57, cy: 139, rx: 2.5, ry: 10 }], ['f', 'adductors', 'ellipse', { cx: 63, cy: 139, rx: 2.5, ry: 10 }],
-    ['f', 'calves', 'ellipse', { cx: 50, cy: 198, rx: 6, ry: 17 }], ['f', 'calves', 'ellipse', { cx: 70, cy: 198, rx: 6, ry: 17 }],
-    ['f', null, 'ellipse', { cx: 50, cy: 222, rx: 6, ry: 4 }], ['f', null, 'ellipse', { cx: 70, cy: 222, rx: 6, ry: 4 }],
-    ['b', null, 'circle', { cx: 60, cy: 20, r: 13 }], ['b', null, 'rect', { x: 54, y: 31, width: 12, height: 10, rx: 3 }],
-    ['b', 'traps', 'path', { d: 'M44 45 L60 38 L76 45 L68 66 L52 66 Z' }],
-    ['b', 'delts_rear', 'ellipse', { cx: 38, cy: 55, rx: 10, ry: 9 }], ['b', 'delts_rear', 'ellipse', { cx: 82, cy: 55, rx: 10, ry: 9 }],
-    ['b', 'lats', 'path', { d: 'M44 64 Q37 82 47 102 L53 97 L53 68 Z' }], ['b', 'lats', 'path', { d: 'M76 64 Q83 82 73 102 L67 97 L67 68 Z' }],
-    ['b', 'midback', 'rect', { x: 54.5, y: 66, width: 11, height: 22, rx: 4 }], ['b', 'lowback', 'rect', { x: 54.5, y: 90, width: 11, height: 20, rx: 4 }],
-    ['b', 'triceps', 'ellipse', { cx: 31, cy: 81, rx: 6, ry: 13 }], ['b', 'triceps', 'ellipse', { cx: 89, cy: 81, rx: 6, ry: 13 }],
-    ['b', 'forearms', 'ellipse', { cx: 27, cy: 109, rx: 5, ry: 14 }], ['b', 'forearms', 'ellipse', { cx: 93, cy: 109, rx: 5, ry: 14 }],
-    ['b', null, 'circle', { cx: 26, cy: 128, r: 5 }], ['b', null, 'circle', { cx: 94, cy: 128, r: 5 }],
-    ['b', 'glutes', 'ellipse', { cx: 51, cy: 123, rx: 10, ry: 11 }], ['b', 'glutes', 'ellipse', { cx: 69, cy: 123, rx: 10, ry: 11 }],
-    ['b', 'hams', 'ellipse', { cx: 50, cy: 156, rx: 9, ry: 21 }], ['b', 'hams', 'ellipse', { cx: 70, cy: 156, rx: 9, ry: 21 }],
-    ['b', 'calves', 'ellipse', { cx: 50, cy: 197, rx: 7, ry: 17 }], ['b', 'calves', 'ellipse', { cx: 70, cy: 197, rx: 7, ry: 17 }],
-    ['b', null, 'ellipse', { cx: 50, cy: 222, rx: 6, ry: 4 }], ['b', null, 'ellipse', { cx: 70, cy: 222, rx: 6, ry: 4 }]
-  ];
   const BUCKETS = [[80, 'var(--p25)', '80–100 %'], [50, 'var(--p20)', '50–79 %'], [20, 'var(--p15)', '20–49 %'], [1, 'var(--p10)', '1–19 %']];
   const bucketColor = v => { for (const [min, c] of BUCKETS) if (v >= min) return c; return null; };
   /* loads: muscle → 0..100 (относительная нагрузка) */
-  function bodyMap(loads, views) {
-    views = views || 'fb';
-    const w = views.length * 120;
-    const svg = s('svg', { viewBox: '0 0 ' + w + ' 232', role: 'img', 'aria-label': 'Нагруженные мышцы' });
-    views.split('').forEach((vw, i) => {
-      const g = s('g', { transform: 'translate(' + i * 120 + ' 0)' });
-      BODY.filter(b => b[0] === vw).forEach(([, m, tag, attrs]) => {
-        const a = Object.assign({}, attrs); const shade = a.shade; delete a.shade;
-        const c = m ? bucketColor(loads[m] || 0) : null;
-        a.fill = c || (shade ? 'var(--body-line)' : 'var(--body)'); a.stroke = 'var(--surface)'; a['stroke-width'] = 1.4;
-        const el = s(tag, a); if (m) el.appendChild(s('title', null, MUSCLES[m] + (loads[m] ? ': ' + Math.round(loads[m]) + ' %' : '')));
-        g.appendChild(el);
-      });
-      svg.appendChild(g);
-    });
-    return svg;
-  }
+  function bodyMap(loads, views) { return KF_POSE.anatomy(loads, bucketColor, views, MUSCLES); }
   function relLoads(muscles) { const max = Math.max(1, ...Object.values(muscles || {})); const o = {}; for (const k in muscles) o[k] = muscles[k] / max * 100; return o; }
   function exThumb(ex) {
     if (!ex) return h('div', { class: 'thumb' });
-    const m = ex.muscles || {}; const backKeys = ['traps', 'delts_rear', 'lats', 'midback', 'lowback', 'triceps', 'glutes', 'hams'];
+    const m = ex.muscles || {};
+    const fig = KF_POSE.figure(ex.id, relLoads(m), bucketColor, { thumb: true, phase: 0.55 });
+    if (fig) return h('div', { class: 'thumb' }, fig.svg);
+    const backKeys = ['traps', 'delts_rear', 'lats', 'midback', 'lowback', 'triceps', 'glutes', 'hams'];
     let fr = 0, bk = 0; for (const k in m) { if (backKeys.includes(k)) bk += m[k]; else fr += m[k]; }
     return h('div', { class: 'thumb' }, bodyMap(relLoads(m), bk > fr ? 'b' : 'f'));
+  }
+  /* Панель упражнения: анимированная фигура + карта мышц */
+  function exPanel(ex) {
+    const loads = relLoads(ex ? ex.muscles : {});
+    const fig = ex ? KF_POSE.figure(ex.id, loads, bucketColor, { phase: 0 }) : null;
+    if (!fig) return h('div', { class: 'ex-figure' }, bodyMap(loads));
+    KF_POSE.animate(fig);
+    return h('div', { class: 'ex-figure duo' }, h('div', { class: 'pose-wrap' }, fig.svg), h('div', { class: 'anat-wrap' }, bodyMap(loads)));
   }
   function legend() { return h('div', { class: 'legend' }, BUCKETS.slice().reverse().map(([, c, l]) => h('span', null, h('i', { style: { background: c } }), l))); }
 
@@ -483,7 +448,10 @@
   }
 
   function viewDesk() {
-    const out = h('div');
+    const hr = new Date().getHours();
+    const hello = hr < 5 ? 'Доброй ночи' : hr < 12 ? 'Доброе утро' : hr < 18 ? 'Добрый день' : 'Добрый вечер';
+    const out = h('div', null, h('div', { class: 'greet' }, h('div', { class: 'greet-date' }, new Date().toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' })),
+      h('div', { class: 'greet-hi' }, hello + ', ' + (S.profile.name || 'Кирилл'))));
     const w = activeWorkout();
     if (w) out.appendChild(h('button', { class: 'banner', type: 'button', onclick: () => push('workout', { id: w.id }) }, 'Идёт тренировка «' + w.name + '» — продолжить'));
     add(out, [installHint()]);
@@ -695,7 +663,7 @@
     const w = S.workouts.find(x => x.id === id); if (!w || !w.items[i]) { UI.stack.pop(); return screenWorkout({ id }); }
     const it = w.items[i]; const ex = exById(it.exId); const type = ex ? ex.type : 'w';
     const out = h('div', null, topbar((i + 1) + '/' + w.items.length + ' ' + (ex ? ex.group : ''), { back: true, timer: !w.end }));
-    out.appendChild(h('div', { class: 'ex-figure' }, bodyMap(relLoads(ex ? ex.muscles : {}))));
+    out.appendChild(exPanel(ex));
     out.appendChild(h('div', { class: 'ex-title' }, exName(it.exId, it.name)));
     const last = lastSets(it.exId, w.id);
     if (last) out.appendChild(h('div', { class: 'prev-line' }, 'Прошлый раз (' + fmtDate(dayKey(last.date)) + '): ',
@@ -732,7 +700,7 @@
       const a = type === 't' ? null : num(kgIn.value), b = num(repsIn.value);
       if (!b || b <= 0) { toast(type === 't' ? 'Введите минуты' : 'Введите число повторов'); repsIn.focus(); return; }
       const set = { kg: type === 'w' ? Math.max(0, a || 0) : 0, reps: type === 't' ? 0 : Math.round(b), min: type === 't' ? b : 0, type: setType, note: comment, t: Date.now() };
-      it.sets.push(set); save();
+      it.sets.push(set); UI.newSet = set.t; save();
       if (type !== 't') startRest(S.settings.rest);
       if (itemPct(it) >= 1 && i < w.items.length - 1) toast('Упражнение выполнено — можно переходить к следующему');
       render();
@@ -750,7 +718,7 @@
       let wn = 0;
       it.sets.forEach((x, j) => {
         const label = x.type === 'warm' ? 'Р' : String(++wn);
-        sets.appendChild(h('div', { class: 'set' }, h('span', { class: 'n' }, label),
+        sets.appendChild(h('div', { class: 'set' + (x.t === UI.newSet ? ' new' : '') }, h('span', { class: 'n' }, label),
           h('div', null, h('span', { class: 'v' }, type === 't' ? fmtNum(x.min) + ' мин' : (x.kg ? fmtNum(x.kg) + ' кг × ' + x.reps : x.reps + ' повт.')), x.note ? h('div', { class: 'small muted' }, x.note) : null),
           x.type !== 'work' ? h('span', { class: 'tag' }, SET_TYPES.find(t => t[0] === x.type)[1]) : h('span'),
           h('button', { class: 'icon-btn', type: 'button', 'aria-label': 'Изменить подход ' + label, onclick: () => editSet(it, j, type) }, icon('edit'))));
@@ -1123,7 +1091,7 @@
     out.appendChild(seg([['desc', 'Описание'], ['mus', 'Мышцы'], ['hist', 'История'], ['prog', 'Прогресс']], tab, t => replaceTop('exCard', { id, tab: t }), true));
     const hist = exHistory(id);
     if (tab === 'desc') {
-      out.appendChild(h('div', { class: 'ex-figure' }, bodyMap(relLoads(ex.muscles))));
+      out.appendChild(exPanel(ex));
       out.appendChild(h('div', { class: 'ex-title' }, ex.name));
       out.appendChild(h('div', { class: 'muted', style: { margin: '0 2px 10px' } }, ex.equip + ' · ' + (ex.type === 'w' ? 'вес × повторы' : ex.type === 'r' ? 'повторы' : 'минуты')));
       if (ex.desc) out.appendChild(h('div', { class: 'block' }, h('div', { class: 'h2', style: { margin: '0 0 6px' } }, 'Техника'), h('p', { class: 'desc', style: { margin: 0 } }, ex.desc)));

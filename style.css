@@ -217,3 +217,79 @@ button.ring-btn { border: 0; background: none; padding: 0; display: grid; justif
 .check .box svg { width: 16px; height: 16px; }
 .icon-btn[disabled], .btn[disabled] { opacity: .4; }
 .tabbar[hidden] { display: none; }
+
+/* ===== Премиальный слой 1.1 ===== */
+:root {
+  --bg: #ECEEF1; --surface: #FFFFFF; --surface2: #F2F4F7; --ink: #101318; --muted: #69737E; --line: #DDE2E7;
+  --accent: #2160D6; --accent-ink: #FFFFFF;
+  --body: #CFD5DB; --body-far: #B7BEC6; --body-line: #B7BEC6; --muscle: #BEC5CD; --eq: #8E979F;
+  --shadow: 0 1px 2px rgba(16, 24, 40, .05), 0 6px 18px -8px rgba(16, 24, 40, .10);
+  --edge: inset 0 0 0 1px rgba(16, 24, 40, .04);
+  --bar-bg: rgba(255, 255, 255, .78);
+  --r-m: 18px; --r-l: 26px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0B0D10; --surface: #15181D; --surface2: #1D2127; --ink: #EEF1F4; --muted: #8A949E; --line: #252A31;
+    --accent: #4F8CFF; --accent-ink: #06101F;
+    --body: #39414A; --body-far: #2A3037; --body-line: #2A3037; --muscle: #474F59; --eq: #5B646E;
+    --shadow: 0 1px 0 rgba(255, 255, 255, .03) inset, 0 10px 24px -14px rgba(0, 0, 0, .8);
+    --edge: inset 0 0 0 1px rgba(255, 255, 255, .045);
+    --bar-bg: rgba(21, 24, 29, .72);
+  }
+}
+.block, .list, .hero, .meal, .ex-figure, .set, .seg button, .round, .pill-time, .chip, .icon-btn { box-shadow: var(--edge); }
+.block, .list, .hero, .meal, .ex-figure { box-shadow: var(--shadow), var(--edge); }
+.top h1 { font-size: 19px; font-weight: 750; }
+.h2 { font-size: 13px; letter-spacing: .02em; margin-top: 22px; }
+
+/* Приветствие */
+.greet { margin: 2px 2px 14px; }
+.greet-date { color: var(--muted); font-size: 15px; }
+.greet-date::first-letter { text-transform: uppercase; }
+.greet-hi { font-size: 30px; line-height: 1.1; font-weight: 800; letter-spacing: -0.03em; margin-top: 2px; }
+
+/* Нижняя панель — матовое стекло */
+.tabbar { background: var(--bar-bg); -webkit-backdrop-filter: blur(22px) saturate(170%); backdrop-filter: blur(22px) saturate(170%);
+  border: 1px solid var(--line); box-shadow: 0 10px 30px -12px rgba(0, 0, 0, .35); }
+.tabbar button[aria-current="page"] { background: var(--surface); box-shadow: var(--edge); }
+
+/* Кнопки */
+.btn { border-radius: 16px; letter-spacing: -0.01em; transition: transform .12s ease, filter .12s ease; }
+.btn:active, .plus:active, .chip:active, .item:active, .round:active { transform: scale(.98); }
+.btn:not(.ghost):not(.soft):not(.danger) { box-shadow: 0 8px 20px -10px var(--accent), inset 0 1px 0 rgba(255, 255, 255, .18); }
+.btn.danger { box-shadow: 0 8px 20px -12px var(--bad); }
+.plus { box-shadow: 0 8px 20px -10px var(--accent); }
+.item { transition: background .15s ease; }
+.item:active { background: var(--surface2); }
+
+/* Кольца и полосы — плавное заполнение */
+.ring circle { transition: stroke-dashoffset .6s cubic-bezier(.2, .8, .2, 1); }
+.bar > i { transition: width .6s cubic-bezier(.2, .8, .2, 1); }
+
+/* Крупные цифры */
+.balance .big { font-size: 30px; font-weight: 800; letter-spacing: -0.02em; }
+.ex-title { font-size: 26px; letter-spacing: -0.03em; }
+.hero .name { font-size: 24px; letter-spacing: -0.03em; }
+.three .v, .ring .v { font-weight: 800; }
+
+/* Фигура упражнения */
+.ex-figure { padding: 10px; }
+.ex-figure.duo { display: grid; grid-template-columns: 1.55fr 1fr; align-items: center; gap: 4px; }
+.ex-figure .pose { display: block; width: 100%; height: 250px; }
+.ex-figure .anat { display: block; width: 100%; height: 250px; }
+.ex-figure.duo .anat { height: 200px; }
+.pose-wrap { background: radial-gradient(120% 90% at 50% 70%, var(--surface2), transparent 70%); border-radius: 18px; }
+.thumb { width: 60px; height: 60px; border-radius: 14px; overflow: hidden; }
+.thumb svg { width: 60px; height: 60px; }
+.anat text { font-family: -apple-system, system-ui, sans-serif; }
+
+/* Новый подход */
+.set { border-radius: 14px; }
+@media (prefers-reduced-motion: no-preference) {
+  .set.new { animation: pop .5s cubic-bezier(.2, .9, .3, 1.3); }
+  @keyframes pop { 0% { transform: scale(.94); background: var(--accent); color: var(--accent-ink); } 100% { transform: none; } }
+  .rest-on .ring { animation: breathe 2s ease-in-out infinite; }
+  @keyframes breathe { 50% { transform: scale(1.03); } }
+}
+.welcome-title { font-size: 44px; letter-spacing: -0.04em; }
