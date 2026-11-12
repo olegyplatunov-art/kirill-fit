@@ -148,3 +148,8 @@ const STARTER_PROGRAMS = [
   { name: 'Спина + бицепс', items: [['pullups', 4, 10, 0], ['lat_pulldown', 3, 12, 45], ['seated_row', 3, 12, 40], ['bb_curl', 3, 10, 30], ['hammer', 3, 12, 14]] },
   { name: 'Ноги + плечи', items: [['squat', 4, 8, 80], ['leg_press', 3, 12, 120], ['leg_curl', 3, 12, 30], ['db_press', 3, 10, 20], ['lateral', 4, 15, 8], ['calf_stand', 4, 15, 60]] }
 ];
+
+/* Упражнения с фото (2 кадра + миниатюра в папке img) */
+const PHOTO_DIR = {"abductor": 1, "adductor": 1, "air_squat": 1, "arnold": 1, "bb_curl": 1, "bb_row": 1, "bench": 1, "bike": 1, "bulgarian": 1, "cable_cross": 1, "cable_crunch": 1, "cable_curl": 1, "calf_seat": 1, "calf_stand": 1, "chest_press": 1, "chinups": 1, "close_bench": 1, "close_pulldown": 1, "crunch": 1, "db_bench": 1, "db_curl": 1, "db_press": 1, "db_row": 1, "deadlift": 1, "decline_bench": 1, "dips_chest": 2, "dips_tri": 2, "ellipse": 2, "face_pull": 2, "flyes": 2, "french": 2, "front_raise": 2, "front_squat": 2, "glute_kick": 2, "hack_squat": 2, "hammer": 2, "hanging_raise": 2, "hip_thrust": 2, "hyperext": 2, "incline_bench": 2, "incline_db": 2, "jump_rope": 2, "lat_pulldown": 2, "lateral": 2, "leg_curl": 2, "leg_ext": 2, "leg_press": 2, "leg_raise_bars": 2, "lunges": 2, "machine_press": 2, "machine_row": 3, "oh_ext": 3, "ohp": 3, "pec_deck": 3, "plank": 3, "preacher": 3, "pullover": 3, "pullups": 3, "pushdown": 3, "pushups": 3, "rdl": 3, "rear_fly": 3, "reverse_pec": 3, "rope_pushdown": 3, "rower": 3, "run": 3, "russian_twist": 3, "seated_curl": 3, "seated_row": 3, "shrugs": 3, "squat": 3, "stairs": 3, "tbar_row": 3, "upright_row": 3, "wrist_curl": 3};
+const PHOTO = new Set(Object.keys(PHOTO_DIR));
+const photoSrc = (id, f) => 'img' + PHOTO_DIR[id] + '/' + id + '-' + f + '.jpg';

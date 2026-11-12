@@ -2,7 +2,7 @@
 /* Кирилл Fit — личное приложение для тренировок и питания.
    Все данные хранятся только на этом iPhone (IndexedDB). Сетевых запросов с данными нет. */
 (function () {
-  const VERSION = '1.1.0';
+  const VERSION = '1.2.0';
   const SCHEMA = 1;
 
   /* ---------- DOM-помощники (без innerHTML) ---------- */
@@ -332,6 +332,7 @@
   function exThumb(ex) {
     if (!ex) return h('div', { class: 'thumb' });
     const m = ex.muscles || {};
+    if (PHOTO.has(ex.id)) return h('div', { class: 'thumb photo-thumb' }, h('img', { src: photoSrc(ex.id, 't'), alt: '', loading: 'lazy', decoding: 'async' }));
     const fig = KF_POSE.figure(ex.id, relLoads(m), bucketColor, { thumb: true, phase: 0.55 });
     if (fig) return h('div', { class: 'thumb' }, fig.svg);
     const backKeys = ['traps', 'delts_rear', 'lats', 'midback', 'lowback', 'triceps', 'glutes', 'hams'];
@@ -341,6 +342,10 @@
   /* Панель упражнения: анимированная фигура + карта мышц */
   function exPanel(ex) {
     const loads = relLoads(ex ? ex.muscles : {});
+    if (ex && PHOTO.has(ex.id)) return h('div', { class: 'photo-panel' },
+      h('img', { class: 'f0', src: photoSrc(ex.id, '0'), alt: ex.name + ': начало движения', decoding: 'async' }),
+      h('img', { class: 'f1', src: photoSrc(ex.id, '1'), alt: ex.name + ': конец движения', decoding: 'async' }),
+      h('div', { class: 'mini-anat' }, bodyMap(loads)));
     const fig = ex ? KF_POSE.figure(ex.id, loads, bucketColor, { phase: 0 }) : null;
     if (!fig) return h('div', { class: 'ex-figure' }, bodyMap(loads));
     KF_POSE.animate(fig);
@@ -1188,6 +1193,7 @@
     out.appendChild(h('button', { class: 'btn ghost', type: 'button', style: { marginTop: '8px' }, onclick: () => confirmSheet('Удалить все данные?', 'Тренировки, питание и настройки будут стёрты с этого iPhone. Сначала сохраните резервную копию.', 'Удалить всё', () =>
       confirmSheet('Точно удалить?', 'Действие нельзя отменить.', 'Да, удалить всё', () => { S = defaultState(); save(true); UI.stack = []; UI.tab = 'train'; render(); }, true), true) }, 'Удалить все данные'));
     out.appendChild(h('p', { class: 'small muted', style: { textAlign: 'center', marginTop: '16px' } }, 'Кирилл Fit ' + VERSION + ' · данные хранятся только на этом iPhone'));
+    out.appendChild(h('p', { class: 'small muted', style: { textAlign: 'center' } }, 'Фото упражнений: открытая база free-exercise-db (github.com/yuhonas/free-exercise-db).'));
     return out;
   }
   function profileForm() {
@@ -1329,7 +1335,7 @@
     if (S.settings.pin && crypto.subtle) UI.locked = true;
     if (S.active) { UI.stack = [{ name: 'workout', params: { id: S.active } }]; keepAwake(true); }
     render();
-    if ('serviceWorker' in navigator && location.protocol === 'https:' && !window.KF_NO_SW) navigator.serviceWorker.register('sw.js').catch(() => {});
+    if ('serviceWorker' in navigator && location.protocol === 'https:' && !window.KF_NO_SW) navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(r => r.update()).catch(() => {});
     if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
   }
   boot();
