@@ -2,7 +2,7 @@
 /* Кирилл Fit — личное приложение для тренировок и питания.
    Все данные хранятся только на этом iPhone (IndexedDB). Сетевых запросов с данными нет. */
 (function () {
-  const VERSION = '1.2.0';
+  const VERSION = '1.4.0';
   const SCHEMA = 1;
 
   /* ---------- DOM-помощники (без innerHTML) ---------- */
@@ -324,7 +324,7 @@
   const pctColor = p => (p >= 0.999 ? 'var(--ok)' : p <= 0 ? 'var(--bad)' : 'var(--warn)');
   const pctClass = p => (p >= 0.999 ? 'done' : p <= 0 ? 'zero' : 'part');
 
-  const BUCKETS = [[80, 'var(--p25)', '80–100 %'], [50, 'var(--p20)', '50–79 %'], [20, 'var(--p15)', '20–49 %'], [1, 'var(--p10)', '1–19 %']];
+  const BUCKETS = [[80, '#D7261E', '80–100 %'], [50, '#E9583A', '50–79 %'], [20, '#F08A5D', '20–49 %'], [1, '#F5B48A', '1–19 %']];
   const bucketColor = v => { for (const [min, c] of BUCKETS) if (v >= min) return c; return null; };
   /* loads: muscle → 0..100 (относительная нагрузка) */
   function bodyMap(loads, views) { return KF_POSE.anatomy(loads, bucketColor, views, MUSCLES); }
